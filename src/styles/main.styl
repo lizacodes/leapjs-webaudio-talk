@@ -1,0 +1,208 @@
+@import 'nib' // CSS3 extensions for Stylus: http://visionmedia.github.io/nib/
+
+// variables!
+
+slide_width = 800px
+slide_height = 100%
+slide_background = #fff
+
+slide_transition_length = .6s
+slide_transition_easing = ease
+slide_transition_rotate_y = 0
+// Safari bugs out on 3d transform-origins, so we have to fake it
+slide_transition_nudge_x = -100px
+
+bullet_transition_length = .3s
+bullet_transition_easing = ease
+bullet_transition_translate_x = 16px
+
+// base
+
+*
+  box-sizing: border-box
+  -moz-box-sizing: border-box
+  margin: 0
+  padding: 0
+
+@media print
+  *
+    -webkit-print-color-adjust: exact
+
+@page
+  size: landscape
+  margin: 0
+
+// bespoke.js layout styles
+
+article
+  transition: background slide_transition_length slide_transition_easing
+  display: none
+  &.bespoke-parent
+    display: block
+    position: absolute
+    top: 0
+    bottom: 0
+    left: 0
+    right: 0
+    overflow: hidden
+    @media print
+      overflow: visible
+      position: static
+    perspective: 600px
+
+.bespoke-slide
+  transition:
+    transform slide_transition_length slide_transition_easing,
+    opacity slide_transition_length slide_transition_easing,
+    background slide_transition_length slide_transition_easing
+  transform-origin: 50% 50% 0
+  backface-visibility: hidden
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  text-align: center
+  width: slide_width
+  height: slide_height
+  position: absolute
+  top: 0
+  // margin-top: (slide_height / 2) * -1
+  left: 50%
+  margin-left: (slide_width / 2) * -1
+  background: slide_background
+  padding: 40px
+  border-radius: 0
+  line-height 1.6
+  @media print
+    zoom: 1 !important // disable bespoke-scale
+    height: 743px // seems to correspond with an A4, landscape page height
+    width: 100%
+    page-break-before: always
+    position: static
+    margin: 0
+
+.bespoke-before
+  transform: translateX(slide_transition_nudge_x * -1) translateX(slide_width / -2) rotateY(slide_transition_rotate_y * -1) translateX(slide_width / -2)
+
+.bespoke-after
+  transform: translateX(slide_transition_nudge_x) translateX(slide_width / 2) rotateY(slide_transition_rotate_y) translateX(slide_width / 2)
+  @media print
+    transform: none
+
+.bespoke-inactive
+  opacity: 0
+  pointer-events: none
+  @media print
+    opacity 1
+
+.bespoke-active
+  opacity: 1
+
+// bespoke-bullet styles
+
+.bespoke-bullet
+  transition: all bullet_transition_length bullet_transition_easing
+
+.bespoke-bullet-inactive
+  opacity: 0
+  li&
+    transform: translateX(bullet_transition_translate_x)
+  @media print
+    opacity: 1
+
+.bespoke-bullet-active
+  opacity: 1
+
+// prism styles
+
+pre
+  padding: 26px !important
+  border-radius: 8px
+
+// content styles
+
+body
+  font-family: 'Open Sans', arial, sans-serif
+  font-size: 18px
+  color: #222
+  background: slide_background
+
+h1
+  font-size: 63px
+  line-height: 1.4
+  letter-spacing: -2px
+  margin-bottom: 16px
+
+h2
+  font-size: 42px
+  letter-spacing: -1px
+  margin-bottom: 8px
+
+h3
+  font-size: 24px
+  font-weight: normal
+  margin-bottom: 24px
+  color: #606060
+
+hr
+  visibility: hidden
+  height: 20px
+
+ul
+  list-style: none
+
+li
+  margin-bottom: 12px
+
+p
+  margin: 0 100px 12px
+  line-height: 22px
+
+a
+  color: #0089f3
+  text-decoration: none
+
+.ctx
+  width: 100%
+  height: 20px
+  border-top: 5px solid #000
+  border-left: 5px solid #000
+  border-right: 5px solid #000
+
+.node-wrapper
+  width: 100%
+  margin-top: 10px
+
+.node
+  clearfix()
+  border: 5px solid #000
+  border-radius: 10px
+  padding: 50px 20px
+  width: 30%
+  position: relative
+  z-index: 1000
+  float: left
+  margin-right: 5%
+
+  &:after
+    content: ""
+    position: absolute
+    width: 25%
+    height: 1px
+    border-top: 5px solid #000
+    right: -25%
+    top: 50%
+  &:last-child
+    margin-right: 0
+    &:after
+      border: none
+
+#sound-btn
+  font-size: 24px
+  background: lightgreen
+  border-radius: 10px
+  border: none
+  padding: 10px 20px
+
+.clearfix
+  clearfix()
