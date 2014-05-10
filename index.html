@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Starting a band with Web Audio and LeapJS</title>
+    <!-- build:css styles/styles.css-->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="bower_components/prism/themes/prism-okaidia.css">
+    <link rel="stylesheet" type="text/css" href="styles/main.css">
+    <!-- endbuild-->
+  </head>
+  <body>
+    <article>
+      <section>
+        <h1>Starting a band with Web Audio and LeapJS</h1>
+        <h3>Liza Nguyen<br><a href="http://twitter.com/lnoogn">@lnoogn</a></h3>
+      </section>
+      <section>
+        <h2>The Leap Motion Controller</h2>
+        <p><img src="images/leap-motion-controller.png"></p>
+      </section>
+      <section>
+        <h2>Get LeapJS</h2>
+        <pre><code class="language-markup">&lt;script src="//js.leapmotion.com/leap-0.5.0.js"&gt;&lt;/script&gt;</code></pre>
+        <pre><code class="language-clike">npm install leapjs</code></pre>
+        <pre><code class="language-clike">bower install leapjs</code></pre>
+      </section>
+      <section>
+        <h2>Using LeapJS</h2>
+        <h3>Access frame data</h3>
+        <pre><code class="language-javascript">Leap.loop(function(frame) {
+  frame.hands.forEach(function(hand) {
+    var x = hand.palmPosition[0];
+    var y = hand.palmPosition[1];
+    moveCircle(x, y);
+  });
+});
+</code></pre>
+      </section>
+      <section>
+        <h2>Using LeapJS</h2>
+        <h3>Access gesture data</h3>
+        <pre><code class="language-javascript">var controller = new Leap.Controller({ enableGestures: true});
+
+controller.on('gesture', function(gesture) {
+  /**
+  * Gesture types include: circle, swipe, keyTap, screenTap
+  */
+  document.getElementById('gesture').className = gesture.type;
+});
+</code></pre>
+      </section>
+      <section>
+        <h2>Web Audio</h2>
+        <ul>
+          <li>The Web Audio API is "a high-level JavaScript API for processing and synthesising audio in web applications". ~<a href="https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html">W3C specification</a></li>
+        </ul>
+      </section>
+      <section>
+        <h2>Web Audio basics</h2>
+        <p><strong>Audio context</strong></p>
+        <div class="ctx">&nbsp;</div>
+        <ul class="node-wrapper">
+          <li class="clearfix">
+            <div class="node">Source node</div>
+            <div class="node">Processing node</div>
+            <div class="node">Destination node</div>
+          </li>
+          <li class="clearfix">
+            <div class="node"><strong>Guitar</strong></div>
+            <div class="node"><strong>Pedal</strong></div>
+            <div class="node"><strong>Amplifier</strong></div>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h2>Web Audio basics</h2>
+        <p>Available on Firefox nightly build
+          <pre><code class="language-javascript">var audioCtx = new audioContext();</code></pre>
+        </p>
+        <p>or in Chrome
+          <pre><code class="language-javascript">var audioCtx = new webkitAudioContext();
+</code></pre>
+        </p>
+      </section>
+      <section>
+        <h2>Generating sound with an oscillator</h2>
+        <pre><code class="language-javascript">var oscillator = audioCtx.createOscillator();
+oscillator.type = 'sine';
+oscillator.frequency.value = 440;
+
+// Start playing the source immediately
+oscillator.start(0);
+</code></pre>
+      </section>
+      <section>
+        <h2>Set the volume</h2>
+        <pre><code class="language-javascript">var gainNode = audioCtx.createGainNode();
+var now = audioCtx.currentTime;
+
+// Turn the volume down to 0%
+gainNode.gain.setValueAtTime(0, now);</code></pre>
+      </section>
+      <section>
+        <h2>Connect the sound</h2>
+        <pre><code class="language-javascript">function play() {
+  var now = audioCtx.currentTime;
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  gainNode.gain.setValueAtTime(1, now);
+}
+</code></pre>
+        <button id="sound-btn">Play</button>
+      </section>
+      <section>
+        <h2>Combining LeapJS and Web Audio</h2>
+        <pre><code class="language-javascript">controller.on('gesture', function(gesture) {
+  switch(type) {
+    case 'circle':
+      if(gesture.state === 'stop') { playCoolSound(); }
+      break;
+    case 'swipe':
+      if(gesture.state === 'stop') { playCoolerSound(); }
+      break;
+  }
+});
+</code></pre>
+      </section>
+      <section>
+        <h2>Demo time!</h2>
+      </section>
+      <section>
+        <h2>Questions?</h2>
+        <h3>Any feedback welcome!</h3>
+        <h3>(´･ω･`)<br><a href="http://twitter.com/lnoogn">@lnoogn</a></h3>
+      </section>
+    </article>
+    <!-- build:js scripts/scripts.js-->
+    <script src="bower_components/bespoke.js/dist/bespoke.min.js"></script>
+    <script src="bower_components/bespoke-keys/dist/bespoke-keys.min.js"></script>
+    <script src="bower_components/bespoke-touch/dist/bespoke-touch.min.js"></script>
+    <script src="bower_components/bespoke-bullets/dist/bespoke-bullets.min.js"></script>
+    <script src="bower_components/bespoke-hash/dist/bespoke-hash.min.js"></script>
+    <script src="bower_components/bespoke-forms/dist/bespoke-forms.min.js"></script>
+    <script src="bower_components/prism/prism.js"></script>
+    <script src="scripts/main.js"></script>
+    <!-- endbuild-->
+  </body>
+</html>
