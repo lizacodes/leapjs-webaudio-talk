@@ -1,4 +1,4 @@
-# Starting a band with Web Audio and LeapJS
+# Starting a band LeapJS and Web Audio
 > A [Bespoke.js](http://markdalgleish.com/projects/bespoke.js) presentation, built with [generator-bespoke](https://github.com/markdalgleish/generator-bespoke)
 
 ## View slides locally
