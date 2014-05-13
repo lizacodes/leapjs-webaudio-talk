@@ -138,10 +138,9 @@ html
             controller.on('gesture', function(gesture) {
               switch(type) {
                 case 'circle':
-                  if(gesture.state === 'stop') { playCoolSound(); }
-                  break;
-                case 'swipe':
-                  if(gesture.state === 'stop') { playCoolerSound(); }
+                  if(gesture.state === 'stop') {
+                    playCoolSound(gesture);
+                  }
                   break;
               }
             });
