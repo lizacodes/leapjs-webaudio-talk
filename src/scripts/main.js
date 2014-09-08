@@ -6,7 +6,9 @@ bespoke.from('article', {
   forms: true
 });
 
-var audioCtx = new webkitAudioContext();
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
+var audioCtx = new AudioContext();
 var oscillator = audioCtx.createOscillator();
 oscillator.type = 'sine';
 oscillator.frequency.value = 440;
@@ -14,7 +16,7 @@ oscillator.frequency.value = 440;
 // Start playing the source immediately
 oscillator.start(0);
 
-var gainNode = audioCtx.createGainNode();
+var gainNode = audioCtx.createGain();
 var now = audioCtx.currentTime;
 
 // Turn the volume down tp 0%
